@@ -7,16 +7,16 @@ static void read_dht();
 float t_dht, h_dht = 0;
 DHT dht(12, DHT22);
 
-
-#define DEVICE_NAME      "nat001"
-#define DEVICE_NAME_SIZE 20
+#define DEVICE_NAME      "ESPRESSO-LITE02-SOLDER-BUTTON"
+#define DEVICE_NAME_SIZE 60
 
 char myName[DEVICE_NAME_SIZE];
 
 void register_publish_hooks() {
+  strcpy(myName, DEVICE_NAME);
+
   mqtt->on_prepare_data_once([&](void) {
     dht.begin();
-    strcpy(myName, DEVICE_NAME);
   });
 
   mqtt->on_before_prepare_data([&](void) {
@@ -31,9 +31,11 @@ void register_publish_hooks() {
     data["temp"] = t_dht;
     data["humid"] = h_dht;
     data["state"] = pin_state;
+    data["tags"] = "cmmc,door";
   }, PUBLISH_EVERY);
 
   mqtt->on_after_prepare_data([&](JsonObject * root) {
+
     /**************
       JsonObject& data = (*root)["d"];
       data.remove("version");

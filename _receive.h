@@ -3,7 +3,7 @@ extern String MQTT_CLIENT_ID;
 #define relayPin 15
 int pin_state;
 extern MqttConnector* mqtt;
-extern char myName[20];
+extern char myName[60];
 
 void register_receive_hooks() {
   mqtt->on_subscribe([&](MQTT::Subscribe * sub) -> void {
@@ -21,7 +21,7 @@ void register_receive_hooks() {
     Serial.printf("topic: %s\r\n", topic.c_str());
     Serial.printf("cmd: %s\r\n", cmd.c_str());
     Serial.printf("payload: %s\r\n", payload.c_str());
-    if (cmd == "$/command") {
+    if (cmd == "$/button") {
       if (payload == "ON") {
         digitalWrite(relayPin, HIGH);
         digitalWrite(LED_BUILTIN, LOW);
